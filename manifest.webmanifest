@@ -1,0 +1,12 @@
+{
+  "name":"CashFlow",
+  "short_name":"CashFlow",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#35115f",
+  "theme_color":"#35115f",
+  "description":"Aplikasi pencatatan pemasukan dan pengeluaran sederhana.",
+  "icons":[
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}

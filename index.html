@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#35115f">
+<meta name="description" content="CashFlow - Pencatatan pemasukan dan pengeluaran sederhana">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>CashFlow</title>
+<style>
+:root{
+  --purple:#35115f; --purple2:#54258a; --pink:#f48fb1; --pink2:#ffd3e1;
+  --blue:#8ed8ff; --blue2:#dff5ff; --white:#fff; --text:#2c2440;
+  --muted:#746b82; --green:#23a77a; --red:#e85d75; --card:#ffffff;
+  --shadow:0 12px 30px rgba(53,17,95,.13);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(145deg,#f6effc,#eaf8ff 55%,#fff1f6);color:var(--text);min-height:100vh}
+button,input{font:inherit}
+.splash{position:fixed;inset:0;z-index:100;background:linear-gradient(150deg,#35115f 0%,#54258a 52%,#8ed8ff 100%);display:flex;align-items:center;justify-content:center;color:#fff;transition:.45s}
+.splash.hide{opacity:0;pointer-events:none}
+.splash-box{text-align:center;padding:30px}
+.logo-big{width:112px;height:112px;border-radius:30px;background:rgba(255,255,255,.16);padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.2);margin:auto auto 18px}
+.splash h1{margin:0;font-size:34px;letter-spacing:.5px}.splash p{opacity:.82;margin:7px 0 26px}
+.start{border:0;border-radius:999px;background:#fff;color:var(--purple);padding:13px 34px;font-weight:800;box-shadow:0 10px 25px rgba(0,0,0,.18);cursor:pointer}
+.app{max-width:720px;margin:auto;padding-bottom:92px}
+.header{padding:22px 18px 18px;color:#fff;background:linear-gradient(135deg,var(--purple),#5b2b92);border-radius:0 0 28px 28px;box-shadow:var(--shadow)}
+.header-row{display:flex;align-items:center;justify-content:space-between}.brand{display:flex;gap:12px;align-items:center}
+.brand-icon{width:45px;height:45px;background:rgba(255,255,255,.15);padding:8px;border-radius:14px}.brand h1{font-size:21px;margin:0}.brand small{opacity:.75}
+.balance{margin-top:20px;background:linear-gradient(120deg,rgba(255,255,255,.16),rgba(142,216,255,.18));border:1px solid rgba(255,255,255,.18);padding:16px;border-radius:20px}
+.balance .label{font-size:12px;opacity:.8}.balance .value{font-size:28px;font-weight:850;margin-top:4px}
+.content{padding:18px}
+.page{display:none}.page.active{display:block}
+.section-title{font-size:21px;font-weight:850;margin:3px 0 4px}.subtitle{color:var(--muted);font-size:13px;margin-bottom:15px}
+.card{background:var(--card);border-radius:22px;padding:17px;box-shadow:var(--shadow);margin-bottom:16px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}
+label{font-size:12px;font-weight:750;color:#625873;display:block;margin:0 0 6px}
+input{width:100%;border:1px solid #eadff2;background:#fbf9fd;border-radius:13px;padding:12px;color:var(--text);outline:none}
+input:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(244,143,177,.15)}
+.btn{border:0;border-radius:13px;padding:12px 15px;font-weight:800;cursor:pointer}
+.btn-save{background:linear-gradient(135deg,var(--purple2),var(--pink));color:#fff;width:100%;margin-top:13px}
+.btn-cancel{background:#eee7f4;color:var(--purple);width:100%;margin-top:8px;display:none}
+.list{display:grid;gap:10px}
+.item{border:1px solid #eee5f3;border-radius:16px;padding:13px;background:#fff}
+.item-top{display:flex;justify-content:space-between;gap:10px}.item-date{font-size:11px;color:var(--muted)}.item-desc{font-weight:750;margin-top:3px}
+.amount.in{color:var(--green);font-weight:900}.amount.out{color:var(--red);font-weight:900}
+.actions{display:flex;gap:8px;margin-top:10px}.mini{border:0;padding:7px 11px;border-radius:10px;font-size:12px;font-weight:750;cursor:pointer}.edit{background:var(--blue2);color:#17618b}.del{background:#fff0f3;color:#b72f4c}
+.empty{text-align:center;padding:20px;color:var(--muted);font-size:13px}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.summary{border-radius:19px;padding:16px}.summary.in{background:linear-gradient(135deg,#e9fff7,#fff);border:1px solid #c9f3e2}.summary.out{background:linear-gradient(135deg,#fff0f4,#fff);border:1px solid #ffd3dd}.summary small{color:var(--muted)}.summary strong{display:block;font-size:21px;margin-top:5px}
+.net{background:linear-gradient(135deg,#e8f7ff,#f4edff);border:1px solid #cfe9f8;padding:18px;border-radius:20px;margin-top:12px}.net small{color:var(--muted)}.net strong{display:block;font-size:27px;color:var(--purple);margin-top:4px}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(720px,100%);padding:9px 10px calc(9px + env(safe-area-inset-bottom));background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-top:1px solid #eadff2;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;z-index:20}
+.nav{border:0;background:transparent;padding:8px 4px;border-radius:13px;color:#7b7088;font-size:11px;font-weight:800;cursor:pointer}.nav span{display:block;font-size:20px;margin-bottom:2px}.nav.active{background:#f1e7fa;color:var(--purple)}
+@media(max-width:430px){.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.summary strong{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="splash" id="splash">
+  <div class="splash-box">
+    <img class="logo-big" src="icon.svg" alt="CashFlow">
+    <h1>CashFlow</h1><p>Catat • Pantau • Kendalikan</p>
+    <button class="start" onclick="startApp()">MULAI</button>
+  </div>
+</div>
+
+<div class="app">
+<header class="header">
+  <div class="header-row">
+    <div class="brand"><img class="brand-icon" src="icon.svg" alt=""><div><h1>CashFlow</h1><small>Catatan keuangan sederhana</small></div></div>
+  </div>
+  <div class="balance"><div class="label">SALDO SAAT INI</div><div class="value" id="headerBalance">Rp 0</div></div>
+</header>
+
+<main class="content">
+<section id="page-income" class="page active">
+  <div class="section-title">Pemasukan</div><div class="subtitle">Catat semua uang yang masuk.</div>
+  <div class="card">
+    <input type="hidden" id="incomeId">
+    <div class="form-grid">
+      <div><label>Tanggal</label><input id="incomeDate" type="date"></div>
+      <div><label>Nominal</label><input id="incomeAmount" type="number" min="0" inputmode="numeric" placeholder="0"></div>
+      <div class="full"><label>Keterangan</label><input id="incomeNote" type="text" maxlength="100" placeholder="Contoh: Gaji bulanan"></div>
+    </div>
+    <button class="btn btn-save" onclick="saveTransaction('income')">SIMPAN PEMASUKAN</button>
+    <button class="btn btn-cancel" id="incomeCancel" onclick="cancelEdit('income')">BATAL EDIT</button>
+  </div>
+  <div class="card"><div class="section-title" style="font-size:16px">Riwayat Pemasukan</div><div id="incomeList" class="list"></div></div>
+</section>
+
+<section id="page-expense" class="page">
+  <div class="section-title">Pengeluaran</div><div class="subtitle">Catat semua uang yang keluar.</div>
+  <div class="card">
+    <input type="hidden" id="expenseId">
+    <div class="form-grid">
+      <div><label>Tanggal</label><input id="expenseDate" type="date"></div>
+      <div><label>Nominal</label><input id="expenseAmount" type="number" min="0" inputmode="numeric" placeholder="0"></div>
+      <div class="full"><label>Keterangan</label><input id="expenseNote" type="text" maxlength="100" placeholder="Contoh: Belanja kebutuhan"></div>
+    </div>
+    <button class="btn btn-save" onclick="saveTransaction('expense')">SIMPAN PENGELUARAN</button>
+    <button class="btn btn-cancel" id="expenseCancel" onclick="cancelEdit('expense')">BATAL EDIT</button>
+  </div>
+  <div class="card"><div class="section-title" style="font-size:16px">Riwayat Pengeluaran</div><div id="expenseList" class="list"></div></div>
+</section>
+
+<section id="page-detail" class="page">
+  <div class="section-title">Rincian</div><div class="subtitle">Ringkasan seluruh pemasukan dan pengeluaran.</div>
+  <div class="summary-grid">
+    <div class="summary in"><small>Total Pemasukan</small><strong id="totalIncome">Rp 0</strong></div>
+    <div class="summary out"><small>Total Pengeluaran</small><strong id="totalExpense">Rp 0</strong></div>
+  </div>
+  <div class="net"><small>Saldo Bersih</small><strong id="netBalance">Rp 0</strong></div>
+  <div class="card" style="margin-top:16px">
+    <div class="section-title" style="font-size:16px">Rincian Transaksi</div>
+    <div id="detailList" class="list"></div>
+  </div>
+</section>
+</main>
+
+<nav class="bottom">
+  <button class="nav active" data-page="income"><span>＋</span>Pemasukan</button>
+  <button class="nav" data-page="expense"><span>－</span>Pengeluaran</button>
+  <button class="nav" data-page="detail"><span>▤</span>Rincian</button>
+</nav>
+</div>
+
+<script>
+const KEY='cashflow_transactions_v1';
+let data=JSON.parse(localStorage.getItem(KEY)||'[]');
+const today=new Date().toISOString().slice(0,10);
+document.getElementById('incomeDate').value=today;
+document.getElementById('expenseDate').value=today;
+
+function rupiah(n){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0)}
+function fmtDate(s){if(!s)return '-'; const [y,m,d]=s.split('-'); return `${d}/${m}/${y}`}
+function persist(){localStorage.setItem(KEY,JSON.stringify(data)); render()}
+function startApp(){document.getElementById('splash').classList.add('hide'); setTimeout(()=>document.getElementById('splash').remove(),500)}
+function switchPage(page){
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+ document.getElementById('page-'+page).classList.add('active');
+ document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.page===page));
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>switchPage(b.dataset.page));
+
+function saveTransaction(type){
+ const prefix=type==='income'?'income':'expense';
+ const id=document.getElementById(prefix+'Id').value;
+ const date=document.getElementById(prefix+'Date').value;
+ const amount=Number(document.getElementById(prefix+'Amount').value);
+ const note=document.getElementById(prefix+'Note').value.trim();
+ if(!date||!amount||amount<0||!note){alert('Mohon lengkapi tanggal, nominal, dan keterangan.');return}
+ if(id){
+   const item=data.find(x=>x.id===id); if(item){item.date=date;item.amount=amount;item.note=note}
+ }else data.push({id:Date.now().toString(),type,date,amount,note});
+ cancelEdit(type); persist();
+}
+function editTransaction(type,id){
+ const x=data.find(v=>v.id===id); if(!x)return;
+ const p=type==='income'?'income':'expense';
+ document.getElementById(p+'Id').value=x.id;document.getElementById(p+'Date').value=x.date;
+ document.getElementById(p+'Amount').value=x.amount;document.getElementById(p+'Note').value=x.note;
+ document.getElementById(p+'Cancel').style.display='block';
+ document.querySelector('#page-'+p+' .btn-save').textContent='UPDATE '+(type==='income'?'PEMASUKAN':'PENGELUARAN');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function cancelEdit(type){
+ const p=type==='income'?'income':'expense';
+ document.getElementById(p+'Id').value='';
+ document.getElementById(p+'Date').value=today;
+ document.getElementById(p+'Amount').value='';
+ document.getElementById(p+'Note').value='';
+ document.getElementById(p+'Cancel').style.display='none';
+ document.querySelector('#page-'+p+' .btn-save').textContent='SIMPAN '+(type==='income'?'PEMASUKAN':'PENGELUARAN');
+}
+function removeTransaction(id){
+ if(confirm('Hapus data ini?')){data=data.filter(x=>x.id!==id);persist()}
+}
+function listHtml(items,type){
+ const sorted=[...items].sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
+ if(!sorted.length)return '<div class="empty">Belum ada data.</div>';
+ return sorted.map(x=>`<div class="item">
+   <div class="item-top"><div><div class="item-date">${fmtDate(x.date)}</div><div class="item-desc">${escapeHtml(x.note)}</div></div>
+   <div class="amount ${type==='income'?'in':'out'}">${type==='income'?'+':'-'} ${rupiah(x.amount)}</div></div>
+   <div class="actions"><button class="mini edit" onclick="editTransaction('${type}','${x.id}')">Edit</button><button class="mini del" onclick="removeTransaction('${x.id}')">Hapus</button></div>
+ </div>`).join('');
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function render(){
+ const ins=data.filter(x=>x.type==='income'), outs=data.filter(x=>x.type==='expense');
+ const ti=ins.reduce((a,x)=>a+x.amount,0),to=outs.reduce((a,x)=>a+x.amount,0);
+ document.getElementById('incomeList').innerHTML=listHtml(ins,'income');
+ document.getElementById('expenseList').innerHTML=listHtml(outs,'expense');
+ document.getElementById('detailList').innerHTML=listHtml([...data],'income').replaceAll('amount in','amount out');
+ // render detail separately to preserve +/- styling
+ const all=[...data].sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
+ document.getElementById('detailList').innerHTML=all.length?all.map(x=>`<div class="item"><div class="item-top"><div><div class="item-date">${fmtDate(x.date)} • ${x.type==='income'?'Pemasukan':'Pengeluaran'}</div><div class="item-desc">${escapeHtml(x.note)}</div></div><div class="amount ${x.type==='income'?'in':'out'}">${x.type==='income'?'+':'-'} ${rupiah(x.amount)}</div></div></div>`).join(''):'<div class="empty">Belum ada transaksi.</div>';
+ document.getElementById('totalIncome').textContent=rupiah(ti);document.getElementById('totalExpense').textContent=rupiah(to);
+ document.getElementById('netBalance').textContent=rupiah(ti-to);document.getElementById('headerBalance').textContent=rupiah(ti-to);
+}
+render();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+</script>
+</body>
+</html>
