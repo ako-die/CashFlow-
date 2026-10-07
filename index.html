@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#35115f">
+<title>CashFlow</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5effa;color:#30253d}
+.splash{position:fixed;inset:0;z-index:99;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#35115f 0%,#55238a 55%,#8ed8ff 100%);color:#fff}
+.splash-box{text-align:center;width:100%;padding:24px}.logo{width:112px;height:112px;margin:0 auto 20px;border-radius:30px;background:linear-gradient(135deg,#7e2da7,#8ed8ff);padding:18px;box-shadow:0 18px 40px #0003}
+.splash h1{font-size:44px;margin:0 0 10px}.tag{font-size:18px;font-weight:700;opacity:.9;margin-bottom:50px}
+.start{border:0;border-radius:50px;background:#fff;color:#35115f;padding:17px 66px;font-size:21px;font-weight:800}
+.created-bottom{margin-top:18px;color:#fff;font-size:17px;font-weight:700;letter-spacing:.5px}
+.app{display:none;max-width:720px;margin:auto;padding-bottom:90px}.header{background:linear-gradient(135deg,#35115f,#612b96);color:#fff;padding:22px 18px;border-radius:0 0 26px 26px}
+.brand{font-size:22px;font-weight:800}.balance{margin-top:18px;background:#ffffff1c;border:1px solid #ffffff26;border-radius:18px;padding:15px}.balance small{opacity:.75}.balance strong{display:block;font-size:27px;margin-top:5px}
+.content{padding:18px}.page{display:none}.page.active{display:block}.title{font-size:22px;font-weight:800}.sub{font-size:13px;color:#766b81;margin:4px 0 15px}
+.card{background:#fff;border-radius:20px;padding:16px;margin-bottom:16px;box-shadow:0 10px 28px #35115f16}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}label{font-size:12px;font-weight:700;color:#655a70;display:block;margin-bottom:5px}
+input{width:100%;padding:12px;border:1px solid #e5dbea;border-radius:12px;background:#fbf9fd;font-size:15px}.full{grid-column:1/-1}
+.btn{width:100%;border:0;border-radius:12px;padding:12px;margin-top:12px;font-weight:800}.save{background:linear-gradient(135deg,#54258a,#f48fb1);color:#fff}.cancel{background:#eee7f4;color:#35115f;display:none}
+.item{border:1px solid #eee5f3;border-radius:15px;padding:12px;margin-top:9px}.row{display:flex;justify-content:space-between;gap:8px}.date{font-size:11px;color:#7d7285}.desc{font-weight:700;margin-top:3px}.in{color:#23a77a;font-weight:900}.out{color:#e85d75;font-weight:900}
+.actions{display:flex;gap:7px;margin-top:9px}.mini{border:0;border-radius:9px;padding:7px 11px;font-size:12px;font-weight:700}.edit{background:#dff5ff;color:#17618b}.del{background:#fff0f3;color:#b72f4c}.empty{text-align:center;color:#887d90;padding:15px;font-size:13px}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:11px}.sum{padding:15px;border-radius:18px;background:#fff}.sum strong{display:block;font-size:20px;margin-top:4px}.net{margin-top:11px;background:#e8f7ff;border-radius:18px;padding:16px}.net strong{display:block;font-size:25px;color:#35115f;margin-top:4px}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(720px,100%);display:grid;grid-template-columns:repeat(3,1fr);padding:9px;background:#fffffff2;border-top:1px solid #eadff2}.nav button{border:0;background:transparent;color:#776c82;padding:8px;border-radius:12px;font-weight:800}.nav button.active{background:#f0e7f8;color:#35115f}
+@media(max-width:430px){.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<div class="splash" id="splash">
+  <div class="splash-box">
+    <div class="logo">
+      <svg viewBox="0 0 100 100" width="100%" height="100%" aria-label="CashFlow icon">
+        <rect x="10" y="12" width="80" height="76" rx="15" fill="#fff"/>
+        <path d="M25 34h50M25 48h38M25 63h22" stroke="#35115f" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="72" cy="64" r="10" fill="#8ed8ff"/>
+        <path d="M67 64l4 4 7-9" fill="none" stroke="#35115f" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h1>CashFlow</h1>
+    <div class="tag">Catat • Pantau • Kendalikan</div>
+    <button class="start" onclick="startApp()">MULAI</button>
+    <div class="created-bottom">Created by dee</div>
+  </div>
+</div>
+
+<div class="app" id="app">
+<header class="header"><div class="brand">CashFlow</div><div class="balance"><small>SALDO SAAT INI</small><strong id="balance">Rp 0</strong></div></header>
+<main class="content">
+<section class="page active" id="income">
+<div class="title">Pemasukan</div><div class="sub">Catat semua uang yang masuk.</div>
+<div class="card"><input type="hidden" id="iid"><div class="grid"><div><label>Tanggal</label><input id="idate" type="date"></div><div><label>Nominal</label><input id="iamt" type="number" min="0" placeholder="0"></div><div class="full"><label>Keterangan</label><input id="inote" placeholder="Contoh: Gaji bulanan"></div></div><button class="btn save" onclick="save('income')">SIMPAN PEMASUKAN</button><button class="btn cancel" id="icancel" onclick="cancel('income')">BATAL EDIT</button></div>
+<div class="card"><div class="title" style="font-size:16px">Riwayat Pemasukan</div><div id="ilist"></div></div>
+</section>
+
+<section class="page" id="expense">
+<div class="title">Pengeluaran</div><div class="sub">Catat semua uang yang keluar.</div>
+<div class="card"><input type="hidden" id="eid"><div class="grid"><div><label>Tanggal</label><input id="edate" type="date"></div><div><label>Nominal</label><input id="eamt" type="number" min="0" placeholder="0"></div><div class="full"><label>Keterangan</label><input id="enote" placeholder="Contoh: Belanja kebutuhan"></div></div><button class="btn save" onclick="save('expense')">SIMPAN PENGELUARAN</button><button class="btn cancel" id="ecancel" onclick="cancel('expense')">BATAL EDIT</button></div>
+<div class="card"><div class="title" style="font-size:16px">Riwayat Pengeluaran</div><div id="elist"></div></div>
+</section>
+
+<section class="page" id="detail">
+<div class="title">Rincian</div><div class="sub">Ringkasan seluruh transaksi.</div>
+<div class="summary"><div class="sum"><small>Total Pemasukan</small><strong class="in" id="tin">Rp 0</strong></div><div class="sum"><small>Total Pengeluaran</small><strong class="out" id="tout">Rp 0</strong></div></div>
+<div class="net"><small>Saldo Bersih</small><strong id="tnet">Rp 0</strong></div>
+<div class="card" style="margin-top:15px"><div class="title" style="font-size:16px">Rincian Transaksi</div><div id="all"></div></div>
+</section>
+</main>
+<nav class="nav"><button class="active" onclick="page('income',this)">＋<br>Pemasukan</button><button onclick="page('expense',this)">－<br>Pengeluaran</button><button onclick="page('detail',this)">▤<br>Rincian</button></nav>
+</div>
+
+<script>
+const KEY='cashflow_transactions_v1';let data=JSON.parse(localStorage.getItem(KEY)||'[]');const today=new Date().toISOString().slice(0,10);
+idate.value=today;edate.value=today;
+function rupiah(n){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n||0)}
+function startApp(){splash.style.display='none';app.style.display='block'}
+function page(p,b){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');scrollTo(0,0)}
+function save(type){let pre=type==='income'?'i':'e',id=document.getElementById(pre+'id').value,date=document.getElementById(pre+'date').value,amt=Number(document.getElementById(pre+'amt').value),note=document.getElementById(pre+'note').value.trim();if(!date||!amt||!note){alert('Mohon lengkapi data.');return}if(id){let x=data.find(v=>v.id===id);Object.assign(x,{date,amount:amt,note})}else data.push({id:Date.now().toString(),type,date,amount:amt,note});cancel(type);persist()}
+function cancel(type){let p=type==='income'?'i':'e';document.getElementById(p+'id').value='';document.getElementById(p+'date').value=today;document.getElementById(p+'amt').value='';document.getElementById(p+'note').value='';document.getElementById(p+'cancel').style.display='none'}
+function edit(type,id){let x=data.find(v=>v.id===id),p=type==='income'?'i':'e';document.getElementById(p+'id').value=x.id;document.getElementById(p+'date').value=x.date;document.getElementById(p+'amt').value=x.amount;document.getElementById(p+'note').value=x.note;document.getElementById(p+'cancel').style.display='block';document.querySelector('#'+(type==='income'?'income':'expense')+' .save').textContent='UPDATE';}
+function del(id){if(confirm('Hapus data ini?')){data=data.filter(x=>x.id!==id);persist()}}
+function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function list(arr,type){arr=[...arr].sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));if(!arr.length)return '<div class="empty">Belum ada data.</div>';return arr.map(x=>`<div class="item"><div class="row"><div><div class="date">${x.date.split('-').reverse().join('/')}</div><div class="desc">${esc(x.note)}</div></div><div class="${type==='income'?'in':'out'}">${type==='income'?'+':'-'} ${rupiah(x.amount)}</div></div><div class="actions"><button class="mini edit" onclick="edit('${type}','${x.id}')">Edit</button><button class="mini del" onclick="del('${x.id}')">Hapus</button></div></div>`).join('')}
+function persist(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function render(){let ins=data.filter(x=>x.type==='income'),outs=data.filter(x=>x.type==='expense'),ti=ins.reduce((a,x)=>a+x.amount,0),to=outs.reduce((a,x)=>a+x.amount,0);ilist.innerHTML=list(ins,'income');elist.innerHTML=list(outs,'expense');tin.textContent=rupiah(ti);tout.textContent=rupiah(to);tnet.textContent=rupiah(ti-to);balance.textContent=rupiah(ti-to);let all=data.slice().sort((a,b)=>b.date.localeCompare(a.date));document.getElementById('all').innerHTML=all.length?all.map(x=>`<div class="item"><div class="row"><div><div class="date">${x.date.split('-').reverse().join('/')} • ${x.type==='income'?'Pemasukan':'Pengeluaran'}</div><div class="desc">${esc(x.note)}</div></div><div class="${x.type==='income'?'in':'out'}">${x.type==='income'?'+':'-'} ${rupiah(x.amount)}</div></div></div>`).join(''):'<div class="empty">Belum ada transaksi.</div>'}
+render();
+</script>
+</body>
+</html>
