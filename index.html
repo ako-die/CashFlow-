@@ -2,55 +2,205 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#35115f">
+<meta name="description" content="CashFlow - Pencatatan pemasukan dan pengeluaran sederhana">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <title>CashFlow</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f6f0fa;color:#30253d}
-.splash{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#35115f,#59268d,#8ed8ff);color:#fff;z-index:10}
-.box{text-align:center;padding:24px;width:100%}.logo{width:112px;height:112px;margin:auto auto 20px;padding:18px;border-radius:30px;background:#fff}
-h1{font-size:42px;margin:0 0 8px}.tag{font-size:17px;font-weight:700;margin-bottom:46px}
-.start{border:0;border-radius:50px;padding:16px 62px;background:#fff;color:#35115f;font-size:21px;font-weight:800}
-.created{margin-top:18px;color:#fff;font-size:18px;font-weight:700;letter-spacing:.5px}
-.app{display:none;max-width:720px;margin:auto;padding-bottom:90px}.head{padding:22px 18px;background:linear-gradient(135deg,#35115f,#612b96);color:#fff;border-radius:0 0 26px 26px}.brand{font-size:23px;font-weight:800}
-.balance{margin-top:18px;padding:15px;border-radius:18px;background:#ffffff1c}.balance small{opacity:.75}.balance strong{display:block;font-size:27px;margin-top:5px}
-main{padding:18px}.page{display:none}.active{display:block}.title{font-size:22px;font-weight:800}.sub{font-size:13px;color:#766b81;margin:4px 0 15px}
-.card{background:#fff;border-radius:20px;padding:16px;margin-bottom:16px;box-shadow:0 10px 28px #35115f16}.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.full{grid-column:1/-1}
-label{font-size:12px;font-weight:700;display:block;margin-bottom:5px;color:#655a70}input{width:100%;padding:12px;border:1px solid #e5dbea;border-radius:12px;background:#fbf9fd}
-.btn{width:100%;border:0;border-radius:12px;padding:12px;margin-top:12px;font-weight:800}.save{background:linear-gradient(135deg,#54258a,#f48fb1);color:#fff}.cancel{display:none;background:#eee7f4;color:#35115f}
-.item{border:1px solid #eee5f3;border-radius:15px;padding:12px;margin-top:9px}.row{display:flex;justify-content:space-between;gap:8px}.date{font-size:11px;color:#7d7285}.desc{font-weight:700;margin-top:3px}.in{color:#23a77a;font-weight:900}.out{color:#e85d75;font-weight:900}
-.actions{display:flex;gap:7px;margin-top:9px}.mini{border:0;border-radius:9px;padding:7px 11px;font-size:12px;font-weight:700}.edit{background:#dff5ff;color:#17618b}.del{background:#fff0f3;color:#b72f4c}.empty{text-align:center;color:#887d90;padding:15px}
-.summary{display:grid;grid-template-columns:1fr 1fr;gap:11px}.sum{padding:15px;border-radius:18px;background:#fff}.sum strong{display:block;font-size:20px;margin-top:4px}.net{margin-top:11px;background:#e8f7ff;border-radius:18px;padding:16px}.net strong{display:block;font-size:25px;color:#35115f;margin-top:4px}
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(720px,100%);display:grid;grid-template-columns:repeat(3,1fr);padding:9px;background:#fffffff2;border-top:1px solid #eadff2}.nav button{border:0;background:transparent;color:#776c82;padding:8px;border-radius:12px;font-weight:800}.nav button.active{background:#f0e7f8;color:#35115f}
-@media(max-width:430px){.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+:root{
+  --purple:#35115f; --purple2:#54258a; --pink:#f48fb1; --pink2:#ffd3e1;
+  --blue:#8ed8ff; --blue2:#dff5ff; --white:#fff; --text:#2c2440;
+  --muted:#746b82; --green:#23a77a; --red:#e85d75; --card:#ffffff;
+  --shadow:0 12px 30px rgba(53,17,95,.13);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(145deg,#f6effc,#eaf8ff 55%,#fff1f6);color:var(--text);min-height:100vh}
+button,input{font:inherit}
+.splash{position:fixed;inset:0;z-index:100;background:linear-gradient(150deg,#35115f 0%,#54258a 52%,#8ed8ff 100%);display:flex;align-items:center;justify-content:center;color:#fff;transition:.45s}
+.splash.hide{opacity:0;pointer-events:none}
+.splash-box{text-align:center;padding:30px}
+.logo-big{width:112px;height:112px;border-radius:30px;background:rgba(255,255,255,.16);padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.2);margin:auto auto 18px}
+.splash h1{margin:0;font-size:34px;letter-spacing:.5px}.splash p{opacity:.82;margin:7px 0 10px}.created{font-size:13px;font-weight:700;letter-spacing:.3px;opacity:.9;margin-bottom:22px}
+.start{border:0;border-radius:999px;background:#fff;color:var(--purple);padding:13px 34px;font-weight:800;box-shadow:0 10px 25px rgba(0,0,0,.18);cursor:pointer}
+.app{max-width:720px;margin:auto;padding-bottom:92px}
+.header{padding:22px 18px 18px;color:#fff;background:linear-gradient(135deg,var(--purple),#5b2b92);border-radius:0 0 28px 28px;box-shadow:var(--shadow)}
+.header-row{display:flex;align-items:center;justify-content:space-between}.brand{display:flex;gap:12px;align-items:center}
+.brand-icon{width:45px;height:45px;background:rgba(255,255,255,.15);padding:8px;border-radius:14px}.brand h1{font-size:21px;margin:0}.brand small{opacity:.75}
+.balance{margin-top:20px;background:linear-gradient(120deg,rgba(255,255,255,.16),rgba(142,216,255,.18));border:1px solid rgba(255,255,255,.18);padding:16px;border-radius:20px}
+.balance .label{font-size:12px;opacity:.8}.balance .value{font-size:28px;font-weight:850;margin-top:4px}
+.content{padding:18px}
+.page{display:none}.page.active{display:block}
+.section-title{font-size:21px;font-weight:850;margin:3px 0 4px}.subtitle{color:var(--muted);font-size:13px;margin-bottom:15px}
+.card{background:var(--card);border-radius:22px;padding:17px;box-shadow:var(--shadow);margin-bottom:16px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}
+label{font-size:12px;font-weight:750;color:#625873;display:block;margin:0 0 6px}
+input{width:100%;border:1px solid #eadff2;background:#fbf9fd;border-radius:13px;padding:12px;color:var(--text);outline:none}
+input:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(244,143,177,.15)}
+.btn{border:0;border-radius:13px;padding:12px 15px;font-weight:800;cursor:pointer}
+.btn-save{background:linear-gradient(135deg,var(--purple2),var(--pink));color:#fff;width:100%;margin-top:13px}
+.btn-cancel{background:#eee7f4;color:var(--purple);width:100%;margin-top:8px;display:none}
+.list{display:grid;gap:10px}
+.item{border:1px solid #eee5f3;border-radius:16px;padding:13px;background:#fff}
+.item-top{display:flex;justify-content:space-between;gap:10px}.item-date{font-size:11px;color:var(--muted)}.item-desc{font-weight:750;margin-top:3px}
+.amount.in{color:var(--green);font-weight:900}.amount.out{color:var(--red);font-weight:900}
+.actions{display:flex;gap:8px;margin-top:10px}.mini{border:0;padding:7px 11px;border-radius:10px;font-size:12px;font-weight:750;cursor:pointer}.edit{background:var(--blue2);color:#17618b}.del{background:#fff0f3;color:#b72f4c}
+.empty{text-align:center;padding:20px;color:var(--muted);font-size:13px}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.summary{border-radius:19px;padding:16px}.summary.in{background:linear-gradient(135deg,#e9fff7,#fff);border:1px solid #c9f3e2}.summary.out{background:linear-gradient(135deg,#fff0f4,#fff);border:1px solid #ffd3dd}.summary small{color:var(--muted)}.summary strong{display:block;font-size:21px;margin-top:5px}
+.net{background:linear-gradient(135deg,#e8f7ff,#f4edff);border:1px solid #cfe9f8;padding:18px;border-radius:20px;margin-top:12px}.net small{color:var(--muted)}.net strong{display:block;font-size:27px;color:var(--purple);margin-top:4px}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(720px,100%);padding:9px 10px calc(9px + env(safe-area-inset-bottom));background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-top:1px solid #eadff2;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;z-index:20}
+.nav{border:0;background:transparent;padding:8px 4px;border-radius:13px;color:#7b7088;font-size:11px;font-weight:800;cursor:pointer}.nav span{display:block;font-size:20px;margin-bottom:2px}.nav.active{background:#f1e7fa;color:var(--purple)}
+@media(max-width:430px){.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.summary strong{font-size:18px}}
+.created-bottom{margin-top:18px;color:#fff;font-size:17px;font-weight:700;letter-spacing:.5px;text-align:center;}
 </style>
 </head>
 <body>
-<div class="splash" id="splash"><div class="box">
-<div class="logo"><svg viewBox="0 0 100 100" width="100%" height="100%"><rect x="10" y="12" width="80" height="76" rx="15" fill="#35115f"/><path d="M25 34h50M25 48h38M25 63h22" stroke="#fff" stroke-width="7" stroke-linecap="round"/><circle cx="72" cy="64" r="10" fill="#8ed8ff"/><path d="M67 64l4 4 7-9" fill="none" stroke="#35115f" stroke-width="4" stroke-linecap="round"/></svg></div>
-<h1>CashFlow</h1><div class="tag">Catat • Pantau • Kendalikan</div>
-<button class="start" onclick="startApp()">MULAI</button>
-<div class="created">Created by dee</div>
-</div></div>
+<div class="splash" id="splash">
+  <div class="splash-box">
+    <div class="logo-big"><svg viewBox="0 0 512 512" width="100%" height="100%" aria-label="CashFlow"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#35115f"/><stop offset=".55" stop-color="#8a3db5"/><stop offset="1" stop-color="#8ed8ff"/></linearGradient></defs><rect width="512" height="512" rx="120" fill="url(#g)"/><rect x="100" y="112" width="312" height="288" rx="46" fill="white" opacity=".97"/><path d="M144 190h224M144 250h155" stroke="#35115f" stroke-width="28" stroke-linecap="round"/><path d="M144 318h80" stroke="#f48fb1" stroke-width="28" stroke-linecap="round"/><circle cx="350" cy="318" r="42" fill="#8ed8ff"/><path d="M332 318l12 12 26-30" fill="none" stroke="#35115f" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h1>CashFlow</h1><p>Catat • Pantau • Kendalikan</p>
+    <button class="start" onclick="startApp()">MULAI</button>
+    <div class="created-bottom">Created by dee</div>
+  </div>
+</div>
 
-<div class="app" id="app"><header class="head"><div class="brand">CashFlow</div><div class="balance"><small>SALDO SAAT INI</small><strong id="bal">Rp 0</strong></div></header>
-<main>
-<section class="page active" id="p-in"><div class="title">Pemasukan</div><div class="sub">Catat semua uang yang masuk.</div><div class="card"><input id="in-id" type="hidden"><div class="grid"><div><label>Tanggal</label><input id="in-date" type="date"></div><div><label>Nominal</label><input id="in-amt" type="number" min="0"></div><div class="full"><label>Keterangan</label><input id="in-note"></div></div><button class="btn save" id="in-save" onclick="save('in')">SIMPAN PEMASUKAN</button><button class="btn cancel" id="in-cancel" onclick="reset('in')">BATAL EDIT</button></div><div class="card"><b>Riwayat Pemasukan</b><div id="in-list"></div></div></section>
-<section class="page" id="p-out"><div class="title">Pengeluaran</div><div class="sub">Catat semua uang yang keluar.</div><div class="card"><input id="out-id" type="hidden"><div class="grid"><div><label>Tanggal</label><input id="out-date" type="date"></div><div><label>Nominal</label><input id="out-amt" type="number" min="0"></div><div class="full"><label>Keterangan</label><input id="out-note"></div></div><button class="btn save" id="out-save" onclick="save('out')">SIMPAN PENGELUARAN</button><button class="btn cancel" id="out-cancel" onclick="reset('out')">BATAL EDIT</button></div><div class="card"><b>Riwayat Pengeluaran</b><div id="out-list"></div></div></section>
-<section class="page" id="p-detail"><div class="title">Rincian</div><div class="sub">Ringkasan seluruh transaksi.</div><div class="summary"><div class="sum"><small>Total Pemasukan</small><strong class="in" id="tin">Rp 0</strong></div><div class="sum"><small>Total Pengeluaran</small><strong class="out" id="tout">Rp 0</strong></div></div><div class="net"><small>Saldo Bersih</small><strong id="net">Rp 0</strong></div><div class="card" style="margin-top:15px"><b>Rincian Transaksi</b><div id="all"></div></div></section>
+<div class="app">
+<header class="header">
+  <div class="header-row">
+    <div class="brand"><img class="brand-icon" src="icon.svg" alt=""><div><h1>CashFlow</h1><small>Catatan keuangan sederhana</small></div></div>
+  </div>
+  <div class="balance"><div class="label">SALDO SAAT INI</div><div class="value" id="headerBalance">Rp 0</div></div>
+</header>
+
+<main class="content">
+<section id="page-income" class="page active">
+  <div class="section-title">Pemasukan</div><div class="subtitle">Catat semua uang yang masuk.</div>
+  <div class="card">
+    <input type="hidden" id="incomeId">
+    <div class="form-grid">
+      <div><label>Tanggal</label><input id="incomeDate" type="date"></div>
+      <div><label>Nominal</label><input id="incomeAmount" type="number" min="0" inputmode="numeric" placeholder="0"></div>
+      <div class="full"><label>Keterangan</label><input id="incomeNote" type="text" maxlength="100" placeholder="Contoh: Gaji bulanan"></div>
+    </div>
+    <button class="btn btn-save" onclick="saveTransaction('income')">SIMPAN PEMASUKAN</button>
+    <button class="btn btn-cancel" id="incomeCancel" onclick="cancelEdit('income')">BATAL EDIT</button>
+  </div>
+  <div class="card"><div class="section-title" style="font-size:16px">Riwayat Pemasukan</div><div id="incomeList" class="list"></div></div>
+</section>
+
+<section id="page-expense" class="page">
+  <div class="section-title">Pengeluaran</div><div class="subtitle">Catat semua uang yang keluar.</div>
+  <div class="card">
+    <input type="hidden" id="expenseId">
+    <div class="form-grid">
+      <div><label>Tanggal</label><input id="expenseDate" type="date"></div>
+      <div><label>Nominal</label><input id="expenseAmount" type="number" min="0" inputmode="numeric" placeholder="0"></div>
+      <div class="full"><label>Keterangan</label><input id="expenseNote" type="text" maxlength="100" placeholder="Contoh: Belanja kebutuhan"></div>
+    </div>
+    <button class="btn btn-save" onclick="saveTransaction('expense')">SIMPAN PENGELUARAN</button>
+    <button class="btn btn-cancel" id="expenseCancel" onclick="cancelEdit('expense')">BATAL EDIT</button>
+  </div>
+  <div class="card"><div class="section-title" style="font-size:16px">Riwayat Pengeluaran</div><div id="expenseList" class="list"></div></div>
+</section>
+
+<section id="page-detail" class="page">
+  <div class="section-title">Rincian</div><div class="subtitle">Ringkasan seluruh pemasukan dan pengeluaran.</div>
+  <div class="summary-grid">
+    <div class="summary in"><small>Total Pemasukan</small><strong id="totalIncome">Rp 0</strong></div>
+    <div class="summary out"><small>Total Pengeluaran</small><strong id="totalExpense">Rp 0</strong></div>
+  </div>
+  <div class="net"><small>Saldo Bersih</small><strong id="netBalance">Rp 0</strong></div>
+  <div class="card" style="margin-top:16px">
+    <div class="section-title" style="font-size:16px">Rincian Transaksi</div>
+    <div id="detailList" class="list"></div>
+  </div>
+</section>
 </main>
-<nav class="nav"><button class="active" onclick="page('in',this)">＋<br>Pemasukan</button><button onclick="page('out',this)">－<br>Pengeluaran</button><button onclick="page('detail',this)">▤<br>Rincian</button></nav></div>
+
+<nav class="bottom">
+  <button class="nav active" data-page="income"><span>＋</span>Pemasukan</button>
+  <button class="nav" data-page="expense"><span>－</span>Pengeluaran</button>
+  <button class="nav" data-page="detail"><span>▤</span>Rincian</button>
+</nav>
+</div>
+
 <script>
-const K='cashflow_v2';let d=JSON.parse(localStorage.getItem(K)||'[]');const T=new Date().toISOString().slice(0,10);['in','out'].forEach(p=>document.getElementById(p+'-date').value=T);
-function rp(n){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n||0)}
-function startApp(){splash.style.display='none';app.style.display='block'}
-function page(p,b){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById('p-'+p).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function save(p){let id=document.getElementById(p+'-id').value,date=document.getElementById(p+'-date').value,amt=+document.getElementById(p+'-amt').value,note=document.getElementById(p+'-note').value.trim();if(!date||!amt||!note)return alert('Mohon lengkapi data.');if(id){let x=d.find(a=>a.id===id);Object.assign(x,{date,amt,note})}else d.push({id:Date.now()+'' ,type:p,date,amt,note});reset(p);render()}
-function reset(p){document.getElementById(p+'-id').value='';document.getElementById(p+'-date').value=T;document.getElementById(p+'-amt').value='';document.getElementById(p+'-note').value='';document.getElementById(p+'-cancel').style.display='none';document.getElementById(p+'-save').textContent=p==='in'?'SIMPAN PEMASUKAN':'SIMPAN PENGELUARAN'}
-function edit(p,id){let x=d.find(a=>a.id===id);document.getElementById(p+'-id').value=x.id;document.getElementById(p+'-date').value=x.date;document.getElementById(p+'-amt').value=x.amt;document.getElementById(p+'-note').value=x.note;document.getElementById(p+'-cancel').style.display='block';document.getElementById(p+'-save').textContent='UPDATE'}
-function del(id){if(confirm('Hapus data ini?')){d=d.filter(x=>x.id!==id);render()}}
-function list(a,p){a=a.filter(x=>x.type===p).sort((x,y)=>y.date.localeCompare(x.date));if(!a.length)return '<div class="empty">Belum ada data.</div>';return a.map(x=>'<div class="item"><div class="row"><div><div class="date">'+x.date.split('-').reverse().join('/')+'</div><div class="desc">'+esc(x.note)+'</div></div><div class="'+(p==='in'?'in':'out')+'">'+(p==='in'?'+':'-')+' '+rp(x.amt)+'</div></div><div class="actions"><button class="mini edit" onclick="edit(\''+p+'\',\''+x.id+'\')">Edit</button><button class="mini del" onclick="del(\''+x.id+'\')">Hapus</button></div></div>').join('')}
-function render(){localStorage.setItem(K,JSON.stringify(d));let i=d.filter(x=>x.type==='in').reduce((a,x)=>a+x.amt,0),o=d.filter(x=>x.type==='out').reduce((a,x)=>a+x.amt,0);document.getElementById('in-list').innerHTML=list(d,'in');document.getElementById('out-list').innerHTML=list(d,'out');tin.textContent=rp(i);tout.textContent=rp(o);net.textContent=rp(i-o);bal.textContent=rp(i-o);let a=[...d].sort((x,y)=>y.date.localeCompare(x.date));all.innerHTML=a.length?a.map(x=>'<div class="item"><div class="row"><div><div class="date">'+x.date.split('-').reverse().join('/')+' • '+(x.type==='in'?'Pemasukan':'Pengeluaran')+'</div><div class="desc">'+esc(x.note)+'</div></div><div class="'+(x.type==='in'?'in':'out')+'">'+(x.type==='in'?'+':'-')+' '+rp(x.amt)+'</div></div></div>').join(''):'<div class="empty">Belum ada transaksi.</div>'}
+const KEY='cashflow_transactions_v1';
+let data=JSON.parse(localStorage.getItem(KEY)||'[]');
+const today=new Date().toISOString().slice(0,10);
+document.getElementById('incomeDate').value=today;
+document.getElementById('expenseDate').value=today;
+
+function rupiah(n){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0)}
+function fmtDate(s){if(!s)return '-'; const [y,m,d]=s.split('-'); return `${d}/${m}/${y}`}
+function persist(){localStorage.setItem(KEY,JSON.stringify(data)); render()}
+function startApp(){document.getElementById('splash').classList.add('hide'); setTimeout(()=>document.getElementById('splash').remove(),500)}
+function switchPage(page){
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+ document.getElementById('page-'+page).classList.add('active');
+ document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.page===page));
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>switchPage(b.dataset.page));
+
+function saveTransaction(type){
+ const prefix=type==='income'?'income':'expense';
+ const id=document.getElementById(prefix+'Id').value;
+ const date=document.getElementById(prefix+'Date').value;
+ const amount=Number(document.getElementById(prefix+'Amount').value);
+ const note=document.getElementById(prefix+'Note').value.trim();
+ if(!date||!amount||amount<0||!note){alert('Mohon lengkapi tanggal, nominal, dan keterangan.');return}
+ if(id){
+   const item=data.find(x=>x.id===id); if(item){item.date=date;item.amount=amount;item.note=note}
+ }else data.push({id:Date.now().toString(),type,date,amount,note});
+ cancelEdit(type); persist();
+}
+function editTransaction(type,id){
+ const x=data.find(v=>v.id===id); if(!x)return;
+ const p=type==='income'?'income':'expense';
+ document.getElementById(p+'Id').value=x.id;document.getElementById(p+'Date').value=x.date;
+ document.getElementById(p+'Amount').value=x.amount;document.getElementById(p+'Note').value=x.note;
+ document.getElementById(p+'Cancel').style.display='block';
+ document.querySelector('#page-'+p+' .btn-save').textContent='UPDATE '+(type==='income'?'PEMASUKAN':'PENGELUARAN');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function cancelEdit(type){
+ const p=type==='income'?'income':'expense';
+ document.getElementById(p+'Id').value='';
+ document.getElementById(p+'Date').value=today;
+ document.getElementById(p+'Amount').value='';
+ document.getElementById(p+'Note').value='';
+ document.getElementById(p+'Cancel').style.display='none';
+ document.querySelector('#page-'+p+' .btn-save').textContent='SIMPAN '+(type==='income'?'PEMASUKAN':'PENGELUARAN');
+}
+function removeTransaction(id){
+ if(confirm('Hapus data ini?')){data=data.filter(x=>x.id!==id);persist()}
+}
+function listHtml(items,type){
+ const sorted=[...items].sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
+ if(!sorted.length)return '<div class="empty">Belum ada data.</div>';
+ return sorted.map(x=>`<div class="item">
+   <div class="item-top"><div><div class="item-date">${fmtDate(x.date)}</div><div class="item-desc">${escapeHtml(x.note)}</div></div>
+   <div class="amount ${type==='income'?'in':'out'}">${type==='income'?'+':'-'} ${rupiah(x.amount)}</div></div>
+   <div class="actions"><button class="mini edit" onclick="editTransaction('${type}','${x.id}')">Edit</button><button class="mini del" onclick="removeTransaction('${x.id}')">Hapus</button></div>
+ </div>`).join('');
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function render(){
+ const ins=data.filter(x=>x.type==='income'), outs=data.filter(x=>x.type==='expense');
+ const ti=ins.reduce((a,x)=>a+x.amount,0),to=outs.reduce((a,x)=>a+x.amount,0);
+ document.getElementById('incomeList').innerHTML=listHtml(ins,'income');
+ document.getElementById('expenseList').innerHTML=listHtml(outs,'expense');
+ document.getElementById('detailList').innerHTML=listHtml([...data],'income').replaceAll('amount in','amount out');
+ // render detail separately to preserve +/- styling
+ const all=[...data].sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
+ document.getElementById('detailList').innerHTML=all.length?all.map(x=>`<div class="item"><div class="item-top"><div><div class="item-date">${fmtDate(x.date)} • ${x.type==='income'?'Pemasukan':'Pengeluaran'}</div><div class="item-desc">${escapeHtml(x.note)}</div></div><div class="amount ${x.type==='income'?'in':'out'}">${x.type==='income'?'+':'-'} ${rupiah(x.amount)}</div></div></div>`).join(''):'<div class="empty">Belum ada transaksi.</div>';
+ document.getElementById('totalIncome').textContent=rupiah(ti);document.getElementById('totalExpense').textContent=rupiah(to);
+ document.getElementById('netBalance').textContent=rupiah(ti-to);document.getElementById('headerBalance').textContent=rupiah(ti-to);
+}
 render();
-</script></body></html>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+</script>
+</body>
+</html>
